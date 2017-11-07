@@ -22,7 +22,7 @@ class WC_PJBank_Gateway extends WC_Payment_Gateway {
     public function init_form_fields(){
         $this->form_fields = array(
             'enabled' => array(
-                'title' => __( 'Enable/Disable', 'woocommerce' ),
+                'title' => __( 'Habilitar/Desabilitar', 'woocommerce' ),
                 'type' => 'checkbox',
                 'label' => __( 'Pagamento Habilitado', 'woocommerce' ),
                 'default' => 'no'
@@ -35,8 +35,8 @@ class WC_PJBank_Gateway extends WC_Payment_Gateway {
                 'desc_tip'      => true,
             ),
             'title' => array(
-                'title' => __( 'Title', 'woocommerce' ),
-                'type' => 'text',
+                'title' => __( 'Título', 'woocommerce' ), 
+                'type' => 'text', 
                 'description' => __( 'Adicione um titulo para seu metodo de pagamento', 'woocommerce' ),
                 'default' => __( 'Boleto Bancário', 'woocommerce' ),
                 'desc_tip'      => true,

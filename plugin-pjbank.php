@@ -104,11 +104,10 @@ function custom_popup_boleto($order){
 			}
 		</style>
 		<script>
-
-			// var div = "<?php echo $link_boleto[0] ?>";
-			// setTimeout(function () {
-			// 	window.open(div); 
-			// }, 800); 
+			var div = "<?php echo $link_boleto[0] ?>";
+			setTimeout(function () {
+				window.open(div); 
+			}, 800); 
 		</script>
 	<?php
 }
