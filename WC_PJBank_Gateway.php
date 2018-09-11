@@ -27,6 +27,12 @@ class WC_PJBank_Gateway extends WC_Payment_Gateway {
                 'label' => __( 'Pagamento Habilitado', 'woocommerce' ),
                 'default' => 'no'
             ),
+            'homologacao' => array(
+                'title' => __( 'Ambiente Homologação ?'),
+                'type' => 'checkbox',
+                'description' => __( 'Configura plugin para usar ambiente de SANDBOX', 'woocommerce'),
+                'default' => 'yes',
+            ),
             'token' => array(
                 'title' => __( 'Token', 'woocommerce' ),
                 'type' => 'text',
@@ -76,6 +82,12 @@ class WC_PJBank_Gateway extends WC_Payment_Gateway {
                 'default' => __( '', 'woocommerce' ),
                 'desc_tip'      => true,
             ),
+            'webhook' => array(
+                'title' => __( 'URL Webhook'),
+                'type' => 'text',
+                'description' => __( 'URL que será chamada em caso de alterações na transação (consultar documentação do PJBank)', 'woocommerce'),
+                'desc_tip' => true,
+            ),
         );
     }
 
@@ -113,11 +125,11 @@ class WC_PJBank_Gateway extends WC_Payment_Gateway {
             $item += 1; 
         }
         $composicoes = json_encode($composicoes);
-
+        $api = $options["homologacao"] ? "sandbox" : "api";
         // Inicia chamada cURL
         $curl = curl_init();
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.pjbank.com.br/recebimentos/".$options['token']."/transacoes",
+            CURLOPT_URL => "https://".$api.".pjbank.com.br/recebimentos/".$options['token']."/transacoes",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -141,7 +153,8 @@ class WC_PJBank_Gateway extends WC_Payment_Gateway {
                 "cep_cliente": "'.get_user_meta( $user_id, 'billing_postcode', true ).'",
                 "logo_url": "'.$options['logo'].'",
                 "composicoes": '.$composicoes.',
-                "pedido_numero": "'.$order_id.'"  
+                "pedido_numero": "'.$order_id.'",
+                "webhook" => "'.$this->get_option('webhook').'"  
             }',
             CURLOPT_HTTPHEADER => array(
                 "content-type: application/json"
