@@ -122,7 +122,7 @@ class WC_PJBank_Gateway_Boleto extends WC_Payment_Gateway {
             $item += 1; 
         }
         $composicoes = json_encode($composicoes);
-        $api = $options["homologacao"] ? "sandbox" : "api";
+        $api = $options["homologacao"]=="yes" ? "sandbox" : "api";
         // Inicia chamada cURL
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -133,28 +133,29 @@ class WC_PJBank_Gateway_Boleto extends WC_Payment_Gateway {
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",            
-            CURLOPT_POSTFIELDS => '{
-                "vencimento": "'.$vencimento.'",
-                "valor": "'.$total.'",
-                "juros": "'.$options['juros'].'", 
-                "multa": "'.$options['multa'].'",
-                "desconto": "'.$options['desconto'].'",
-                "nome_cliente": "'.get_user_meta( $user_id, 'billing_first_name', true ).' '.get_user_meta( $user_id, 'billing_last_name', true ).'",
-                "cpf_cliente": "'.$cpf_cnpj.'",
-                "endereco_cliente": "'.get_user_meta( $user_id, 'billing_address_1', true ).'",
-                "numero_cliente": "",
-                "complemento_cliente": "'.get_user_meta( $user_id, 'billing_address_2', true ).'",
-                "bairro_cliente": "",
-                "cidade_cliente": "'.get_user_meta( $user_id, 'billing_city', true ).'",
-                "estado_cliente": "'.get_user_meta( $user_id, 'billing_state', true ).'",
-                "cep_cliente": "'.get_user_meta( $user_id, 'billing_postcode', true ).'",
-                "logo_url": "'.$options['logo'].'",
-                "composicoes": '.$composicoes.',
-                "pedido_numero": "'.$order_id.'",
-                "webhook" => "'.$this->get_option('webhook').'"
-            }',
+            CURLOPT_POSTFIELDS => json_encode(array(
+                "vencimento"=> $vencimento,
+                "valor"=> $total,
+                "juros"=> $options['juros'], 
+                "multa"=> $options['multa'],
+                "desconto"=> $options['desconto'],
+                "nome_cliente"=> get_user_meta( $user_id, 'billing_first_name', true ).' '.get_user_meta( $user_id, 'billing_last_name', true ),
+                "cpf_cliente"=> $cpf_cnpj,
+                "endereco_cliente"=> get_user_meta( $user_id, 'billing_address_1', true ),
+                "numero_cliente"=> "",
+                "complemento_cliente"=> get_user_meta( $user_id, 'billing_address_2', true ),
+                "bairro_cliente"=> "",
+                "cidade_cliente"=> get_user_meta( $user_id, 'billing_city', true ),
+                "estado_cliente"=> get_user_meta( $user_id, 'billing_state', true ),
+                "cep_cliente"=> get_user_meta( $user_id, 'billing_postcode', true ),
+                "logo_url"=> $options['logo'],
+                "composicoes"=> '.$composicoes.',
+                "pedido_numero"=> $order_id,
+                "webhook" => $this->get_option('webhook')
+
+            )), 
             CURLOPT_HTTPHEADER => array(
-                "content-type: application/json"
+                "Content-Type: application/json"
             ),
         )); 
         // Retorno da API é salvo no $response
