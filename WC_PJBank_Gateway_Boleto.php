@@ -88,7 +88,7 @@ class WC_PJBank_Gateway_Boleto extends WC_Payment_Gateway {
                 'description' => __( 'URL que será chamada em caso de alterações na transação (consultar documentação do PJBank)', 'woocommerce'),
                 'desc_tip' => true,
             ),
-            'webhook-chave' => array(
+            'webhookChave' => array(
                 'title' => __( 'Chave Webhook'),
                 'type' => 'text',
                 'description' => __( 'Chave do WebHook para logar em seu sistema (Será enviada na primeira requisição do PJBank para seu sistema - consultar documentação do PJBank)', 'woocommerce'),
