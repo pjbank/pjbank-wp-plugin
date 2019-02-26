@@ -117,7 +117,7 @@ class WC_PJBank_Gateway_Boleto extends WC_Payment_Gateway {
         update_post_meta( $order_id, '_pj_boleto', true );
 
         // Monta o array de composição de items do boleto
-        $composicoes = '';
+        $composicoes = array();
         $item = 0;
         $items = $order->get_items();
 
@@ -145,15 +145,15 @@ class WC_PJBank_Gateway_Boleto extends WC_Payment_Gateway {
                 "juros"=> $options['juros'], 
                 "multa"=> $options['multa'],
                 "desconto"=> $options['desconto'],
-                "nome_cliente"=> get_user_meta( $user_id, 'billing_first_name', true ).' '.get_user_meta( $user_id, 'billing_last_name', true ),
+                "nome_cliente"=> $order->get_billing_first_name().' '.$order->get_billing_last_name(),
                 "cpf_cliente"=> $cpf_cnpj,
-                "endereco_cliente"=> get_user_meta( $user_id, 'billing_address_1', true ),
+                "endereco_cliente"=> $order->get_billing_address_1(),
                 "numero_cliente"=> "",
-                "complemento_cliente"=> get_user_meta( $user_id, 'billing_address_2', true ),
+                "complemento_cliente"=> $order->get_billing_address_2(),
                 "bairro_cliente"=> "",
-                "cidade_cliente"=> get_user_meta( $user_id, 'billing_city', true ),
-                "estado_cliente"=> get_user_meta( $user_id, 'billing_state', true ),
-                "cep_cliente"=> get_user_meta( $user_id, 'billing_postcode', true ),
+                "cidade_cliente"=> $order->get_billing_city(),
+                "estado_cliente"=> $order->get_billing_state(),
+                "cep_cliente"=> $order->get_billing_postcode(),
                 "logo_url"=> $options['logo'],
                 "composicoes"=> '.$composicoes.',
                 "pedido_numero"=> $order_id,
